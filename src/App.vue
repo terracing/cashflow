@@ -1,29 +1,41 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <Suspense>
+    <template #default>
+      <Home/>
+    </template>
+    <template #fallback>
+      <SplashScreen/>
+    </template>
+  </Suspense>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
+<script>
+import SplashScreen from "./components/SplashScreen.vue";
+import { defineAsyncComponent } from "vue";
+export default {
+  components: {
+    SplashScreen,
+    Home: defineAsyncComponent(() => 
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(import("./components/Home.vue"))
+        }, 2500);
+      })
+    )
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+</script>
+
+<style>
+html,
+body,
+.app {
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+* {
+  --brand-green: #04b500;
+  --brand-blue: #0689b0;
 }
 </style>
